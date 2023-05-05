@@ -1,0 +1,51 @@
+//
+// Copyright (c) 2023 Michael Tuexen
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+// OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+// LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE.
+//
+
++0.000 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
++0.000 fcntl(3, F_SETFL, O_RDWR|O_NONBLOCK) = 0
++0.000 connect(3, ..., ...) = -1 EINPROGRESS (Operation now in progress)
+#ifdef FreeBSD
++0.000 > S     0:0(0)                win 65535 <...>
+#endif
+#ifdef Linux
++0.000 > S     0:0(0)                win 64240 <...>
+#endif
++0.000 shutdown(3, SHUT_WR) = 0
+#ifdef FreeBSD
++0.000 > F     1:1(0)                win 65535
+#endif
++0.050 < S.    0:0(0)       ack    1 win 65535 <mss 1460>
+#ifdef FreeBSD
++0.000 > F.    1:1(0)       ack    1 win 65535
+#endif
+#ifdef Linux
++0.000 > R     1:1(0)
+#endif
+#ifdef FreeBSD
++0.050 < F.    1:1(0)       ack    2 win 65535
++0.000 >  .    2:2(0)       ack    2 win 65535
+#endif
++0.000 close(3)= 0
