@@ -1,10 +1,3 @@
-'''
-name       : printUtils.py
-author     : [redacted]
-authored   : 9 June 2020, directly ripped from RFCNLP code.
-description: provides pretty-print utils
-'''
-
 class bcolors:
     HEADER    = '\033[95m'
     OKBLUE    = '\033[94m'
