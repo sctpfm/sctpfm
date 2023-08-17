@@ -1,18 +1,11 @@
-# ==============================================================================
-# File      : Characterize.py
-# Author    : Max von Hippel and Cole Vick and [redacted]
-# Authored  : 30 November 2019 - 13 March 2020
-# Purpose   : Checks when models do or do not satisfy properties.  Also inter-
-#             prets various outputs of Spin.
-# How to run: This code is used by Korg.py, which is what you want to run.
-# ==============================================================================
-
 import subprocess
 import sys
 import os
 from   glob            import glob
 from   korg.Construct  import makeAttackTransferCheck
 from   korg.printUtils import *
+import traceback
+
 
 def nontrivialProps(P, Q, props):
     ret = set()
@@ -131,43 +124,54 @@ OUTPUT:
 '''
 def check(modelFile, maxDepth=600000):
 
-    args = "spin -run -a -DNOREDUCE -m" + str(maxDepth) + " -RS88 " + modelFile
+    print("Calling check(" + modelFile + ") ...")
+
+    if maxDepth > 600000 * 4:
+        print("maxDepth too large for any realistic run.  Edit the code if " \
+            + "you actually really want to do this ... in Characterize.py.")
+        return None
+
+    args = "spin -run -a -DNOREDUCE -m" + str(maxDepth) + " " + str(modelFile)
+    
     args = [a.strip() for a in args.split(" ")]
     args = [a for a in args if len(a) > 0]
     ret = None
 
-    with open(os.devnull, 'w') as devnull:
-        try:
-            ret = subprocess.check_output(args, stderr=devnull)
-            if sys.stdout.encoding != None:
-                ret = ret.decode(sys.stdout.encoding).strip()
-            else:
-                ret = str(ret)
-        except Exception as e:
-            print("+++++++++ Problem in check() ++++++++++")
-            print("---------------- ret ------------------")
-            print(ret)
-            print("--------------- exception -------------")
-            print(e)
-            print("----------------- model ---------------")
-            try:
-                with open(modelFile, "r") as fr:
-                    print(fr.read())
-            except Exception as e_inner:
-                print(e_inner)
-            print("+++++++++++++++++++++++++++++++++++++++")
-            raise e
+    ret = ""
+    print("Calling ", args)
 
-    if ret == None:
-        return False
+    timedOut = False
+    try:
+        process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        for line in iter(process.stdout.readline, b''):
+            line = str(line.decode('utf-8'))
+            if ("violated" in line) or ("acceptance cycle" in line):
+                process.stdout.close()
+                process.wait()
+                return False
+            
+            if ("Search not completed" in line) or ("depth too small" in line):
+                timedOut = True
 
-    if "depth too small" in ret:
-        print("Search depth was too small at " \
-             + str(maxDepth), \
-             " doubling depth ...")
+        process.stdout.close()
+        process.wait()
+        
+        if timedOut:
+            print("Search depth was too small at " \
+                + str(maxDepth), \
+                " doubling depth ...")
+            return check(modelFile, maxDepth * 2)
+        
+        if process.returncode != 0:
+            print("ret code = ", process.returncode, " so returning None ....")
+            return None
+    
+    except Exception as e:
+        traceback.print_exception(e)
+        print("An error occurred: ", e)
         return None
 
-    return not ("violated" in ret or "acceptance cycle" in ret)
+    return True
 
 def makeAllTrails(modelFile, numTrails=100):
     args = ""
@@ -175,7 +179,7 @@ def makeAllTrails(modelFile, numTrails=100):
     if numTrails <= 1:
         args = commandPrefix + modelFile
     else:
-        args = commandPrefix + "-e -c" + str(numTrails - 1) + " " + modelFile
+        args = commandPrefix + "-e -c" + str(numTrails) + " " + modelFile
     subprocess.run(args.split(" "))
     
 '''
@@ -194,6 +198,7 @@ OUTPUTS:
 def models(model, phi, N, name, removeAfter=False):
     
     if None in { model, phi, N, name }:
+        print("None in arguments to models() ... some kind of bug.")
         return False
     
     fmrLines = ""
@@ -213,6 +218,10 @@ def models(model, phi, N, name, removeAfter=False):
         fw.write(fmrLines + "\n" + fNrLines + "\n" + fprLines)
 
     assert(os.path.isfile(name))
+
+    print("About to model check: \n\n" + 
+        fmrLines + "\n" + fNrLines + "\n" + fprLines + 
+        "\n\n")
 
     ret = check(name)
 
