@@ -1,10 +1,3 @@
-# ==============================================================================
-# File      : Construct.py
-# Author    : Max von Hippel and Cole Vick and [redacted]
-# Authored  : 30 November 2019 - 13 March 2020
-# Purpose   : Constructs and interprets Promela models for Korg.
-# How to run: This file is used by Korg.py.
-# ==============================================================================
 import os
 import subprocess
 
