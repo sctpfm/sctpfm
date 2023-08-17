@@ -1,11 +1,3 @@
-# ==============================================================================
-# File      : CLI.py
-# Author    : Max von Hippel and Cole Vick and [redacted]
-# Authored  : 30 November 2019 - 13 March 2020
-# Purpose   : Handles most of the command line interface logic for Korg.
-# How to run: This code is used by Korg.py, which is what you want to run.
-# ==============================================================================
-
 import argparse
 from   glob import glob
 import os
@@ -138,7 +130,10 @@ def addTrailNumberToArgs(args, num):
 		if arg != "-t":
 			ret.append(arg)
 		else:
-			ret.append(arg + str(num))
+			if num > 0:
+				ret.append(arg + str(num))
+			else:
+				ret.append(arg)
 	return ret
 
 def handleTs(args, name):
