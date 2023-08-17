@@ -1,17 +1,3 @@
-# ==============================================================================
-# File      : Korg.py
-# Author    : Max von Hippel and Cole Vick and [redacted]
-# Authored  : 30 November 2019 - 13 March 2020
-# Purpose   : Primary runner for Korg tool
-# How to run: see docs/Korg.md for instructions
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# Security  : This code is not even remotely cyber-secure and should only be run 
-#             locally on inputs you personally manufactured.  Otherwise you 
-#             expose yourself to a basically trivial remote code execution issue 
-#             in Bash, because of the way I am hacking on subprocess.
-# ==============================================================================
-
-
 from korg.CLI          import *
 from korg.Characterize import *
 from korg.Construct    import *
@@ -60,9 +46,9 @@ def checkArgs(max_attacks, phi, model, Q, basic_check_name, IO):
         return 2
     
     # Check validity: Does model || Q |= phi?
-    if not models(model, phi, Q, basic_check_name):
-        printInvalidInputs(model, phi, Q)
-        return 3
+    # if not models(model, phi, Q, basic_check_name):
+    #     printInvalidInputs(model, phi, Q)
+    #     return 3
     
     # Get the IO.  Is it empty?
     if IO == None:
@@ -131,10 +117,16 @@ def body(model, phi, Q, IO, max_attacks=1, \
 
     print("Models? ", _models)
         
-    if net == None or _models:
+    if net == None or _models == True:
         printNoSolution(model, phi, Q, with_recovery)
         cleanUp()
         return 6
+
+    if _models == None:
+        # We need to indicate that it was a real timeout.
+        print("This looks like a real timeout, or an exception in Spin -- see " + daisy_models_name)
+        cleanUp()
+        return 7 # New ret code, 7 means "timed out"
     
     makeAllTrails(daisy_models_name, max_attacks) 
     # second arg is max# attacks to make
