@@ -6,4 +6,4 @@ To run the code, download the latest version of [KORG](https://github.com/maxvon
 
 Then pip install as you would normally.
 
-There are four attacker models: Off-Path, Evil-Server, Replay, and On-Path.  The correct inputs for all but Replay are given in the paper.  You can also just use the Makefile which includes targets for each with which to reproduce our results.  Note, for Replay attackers you should use tester.sh.
+There are four attacker models: Off-Path, Evil-Server, Replay, and On-Path.  The correct inputs for each are given in the paper.  For all but Replay you're encouraged to use the Makefile to reproduce our results; for Replay you should use tester.sh which runs our new "Replay" mode for KORG.
