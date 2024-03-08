@@ -44,7 +44,7 @@ def parse_channels(model) -> dict():
     channels = {}
     for line in model:
         if line.startswith("chan "):
-            data = re.search("chan ([a-zA-Z\_\-]+).*\{(.+)\}", line)
+            data = re.search(r"chan ([a-zA-Z\_\-]+).*\{(.+)\}", line)
             # note, we don't have to think very hard about parsing Promela types.
             # this is because mtype:whatever, mtype, and generic types are interchangable in Promela grammar
             name, ctype = data.group(1), data.group(2).replace(" ","").split(",")
@@ -62,6 +62,7 @@ def ensure_compile(model_path) -> None:
     # Convert bytes to string
     stdout = stdout.decode()
     stderr = stderr.decode()
+
     assert "syntax error" not in stdout, "there seems to be a syntax error in the model"
     assert "processes created" in stdout, "the spin model creates no processes ... check to see if it compiles"
 
