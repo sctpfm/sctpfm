@@ -39,6 +39,7 @@ for entry in `ls $ltl_folder`; do
   if [[ $entry == *.pml ]]
   then
     cp $spinfile "/tmp/spintemp.pml"
+    echo "\n" >> "/tmp/spintemp.pml"
     cat "$ltl_folder"/"$entry" >> "/tmp/spintemp.pml"
     filename="${entry%.pml}"
     spin -run -a -DNOREDUCE -m600000 "/tmp/spintemp.pml" 2>&1 | tee "$output_folder/$filename-out"
