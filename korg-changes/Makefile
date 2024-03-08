@@ -45,6 +45,17 @@ sctpOnPath:
 					--characterize=False;                      \
 				done; done; done;
 
+sctpReplay:
+	python korg/gen_replay_attacker.py \
+		--model=demo/SCTP/tsn_sctp_model.pml \
+		--attacker=replay_mem \
+		--inchan=AtoB \
+		--outchan=AtoB \
+		--output=replayExperiment/output.pml \
+		--mem=2
+	cd replayExperiment && \
+		bash tester.sh output.pml ../demo/SCTP/canonical-properties out
+
 clean:
 	- rm -rf __pycache__
 	- rm -rf tests/__pycache__
