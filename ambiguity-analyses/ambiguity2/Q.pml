@@ -1,0 +1,3 @@
+active proctype Q() {
+    skip;
+}
