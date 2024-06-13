@@ -68,6 +68,11 @@ COPY attacker-models/offPath/*    demo/SCTP/.
 COPY attacker-models/onPath/*     demo/SCTP/.
 COPY attacker-models/replay/*     demo/SCTP/.
 
+RUN mkdir demo/SCTP/ambiguity1
+RUN mkdir demo/SCTP/ambiguity2
+COPY ambiguity-analyses/ambiguity1/* demo/SCTP/ambiguity1/.
+COPY ambiguity-analyses/ambiguity2/* demo/SCTP/ambiguity2/.
+
 RUN pip3 install .
 
 # Set up the replay stuff
