@@ -33,6 +33,14 @@ Once you have the image built, its entrypoint is `bash`, which you can use to in
 ```
 docker run -it sctpfm
 ```
+Once you enter the image, you should be able to interact with it directly via `bash`.
+```
+root@511b78f04291:/AttackerSynthesis# ls
+analysis     demo        example.attacks  __init__.py    LICENSE    replayExperiment  tests
+build        Dockerfile  Gemfile          korg           Makefile   setup.py
+_config.yml  docs        Gemfile.lock     korg.egg-info  README.md  setup.sh
+```
+
 The Makefile has targets to reproduce each result.
 * `sctpOffPath`: Generates the Off-Path attacks for all 10 properties, with and without the patch.
 * `sctpEvilServer`: Generates the Evil-Server attacks for all 10 properties, with and without the patch.
