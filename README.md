@@ -15,12 +15,11 @@ The repository is organized as follows.
 
 ## Requirements
 
-This code has been tested on Linux Mint and Arch Linux using Intel hardware, and Mac OS using Apple Silicon.  The code requires at least 16Gb of RAM in order to run correctly.
+This code has been tested on Linux Mint and Arch Linux using Intel hardware, and Mac OS using Apple Silicon.  The code requires at least 16Gb of RAM in order to run correctly.  In addition, you need to [install Docker on your machine][9]. 
 
 ## Usage
 
-The easiest way to reproduce our results is using the [Dockerfile](Dockerfile).
-To run using Docker, you need to [install Docker on your machine][9], then build the included Dockerfile. 
+The easiest way to reproduce our results is using the [Dockerfile](Dockerfile), which you can build like so.
 ```
 docker build . -t sctpfm
 ```
@@ -28,9 +27,11 @@ Note that depending on your system, you may have to pull the base image first, l
 ```
 docker pull ubuntu:24.04
 ```
+Also, you may need to run the Docker commands in `sudo`.
+
 Once you have the image built, its entrypoint is `bash`, which you can use to interact with the [Makefile](korg-changes/Makefile). 
 ```
-docker run -t sctpfm
+docker run -it sctpfm
 ```
 The Makefile has targets to reproduce each result.
 * `sctpOffPath`: Generates the Off-Path attacks for all 10 properties, with and without the patch.
@@ -65,7 +66,7 @@ python3 korg/Korg.py \
     --name=ambiguity2 \
     --characterize=false
 ```
-Once you’ve reproduced all the attacks you can analyze them by looking at the resulting attacker code saved in `out` inside the Docker image.
+Once you've reproduced all the attacks you can analyze them by looking at the resulting attacker code saved in `out` inside the Docker image.
 
 [1]: https://jakegines.in/
 [2]: https://mxvh.pl/
